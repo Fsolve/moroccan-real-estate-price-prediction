@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Morocco Real Estate Price Predictor | Professional Valuation Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --background-light: #f8fafc;
+            --text-dark: #2c3e50;
+            --text-light: #95a5a6;
+            --shadow-color: rgba(44, 62, 80, 0.1);
+            --gradient-start: #3498db;
+            --gradient-end: #2980b9;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 40px 20px;
+            color: var(--text-dark);
+        }
+
+        .page-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .prediction-form {
+            background-color: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .form-title span {
+            display: block;
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+            margin-top: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        .input-group-text {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            width: 50px;
+            justify-content: center;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            background-color: white;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-predict {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-predict:active {
+            transform: translateY(1px);
+        }
+
+        .result {
+            background: linear-gradient(135deg, var(--success-color), #219a52);
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result h4 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result h3 {
+            color: white;
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-message {
+            background-color: #fff5f5;
+            color: #c0392b;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #e74c3c;
+            font-weight: 500;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feature-icon {
+            font-size: 1.2rem;
+        }
+
+        .input-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .form-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        @media (max-width: 768px) {
+            .prediction-form {
+                padding: 25px;
+            }
+
+            .form-title {
+                font-size: 2rem;
+            }
+
+            .result h3 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container page-container">
+        <div class="prediction-form">
+            <h1 class="form-title">
+                Morocco Real Estate Predictor
+                <span>Professional Property Valuation Tool</span>
+            </h1>
+
+            {% if error_message %}
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                {{ error_message }}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-home me-2"></i>Property Details
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-bed feature-icon"></i>
+                        </span>
+                        <input type="number" class="form-control" id="chambres" name="chambres"
+                            min="1" max="15" step="1" placeholder="Number of Bedrooms" required>
+                    </div>
+                    <div class="input-hint">Enter a value between 1 and 10</div>
+
+                    <div class="input-group mt-4">
+                        <span class="input-group-text">
+                            <i class="fas fa-bath feature-icon"></i>
+                        </span>
+                        <input type="number" class="form-control" id="salles_de_bain" name="salles_de_bain"
+                            min="1" max="8" step="1" placeholder="Number of Bathrooms" required>
+                    </div>
+                    <div class="input-hint">Enter a value between 1 and 8</div>
+
+                    <div class="input-group mt-4">
+                        <span class="input-group-text">
+                            <i class="fas fa-ruler-combined feature-icon"></i>
+                        </span>
+                        <input type="number" class="form-control" id="superficie" name="superficie"
+                             placeholder="Area in m²" required>
+                    </div>
+                    <div class="input-hint">Enter a value </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-map-marker-alt me-2"></i>Location & Type
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-building feature-icon"></i>
+                        </span>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="" disabled selected>Select Property Type</option>
+                            {% for type in types %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group mt-4">
+                        <span class="input-group-text">
+                            <i class="fas fa-city feature-icon"></i>
+                        </span>
+                        <select class="form-select" id="ville" name="ville" required>
+                            <option value="" disabled selected>Select City</option>
+                            {% for ville in villes %}
+                            <option value="{{ ville }}">{{ ville }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-predict w-100">
+                    <i class="fas fa-calculator me-2"></i>
+                    Calculate Property Value
+                </button>
+            </form>
+
+            {% if prediction %}
+            <div class="result">
+                <h4>Estimated Property Value</h4>
+                <h3>{{ "{:,.0f}".format(prediction) }} MAD</h3>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</script>
+</body>
+</html>
